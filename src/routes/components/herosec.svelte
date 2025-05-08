@@ -1,6 +1,7 @@
 
 <script lang="ts">
-  import Card from './Card.svelte';
+  import Card from "./card.svelte";
+
 
   let showPopup = false;
 
@@ -33,7 +34,7 @@
           on:click={handleGetStarted}
         >
           Get started
-        </button>          <a href="#" class="text-sm/6 font-semibold text-gray-900">Learn more <span aria-hidden="true">→</span></a>
+        </button>          <a href="/jobseeker/login/" class="text-sm/6 font-semibold text-gray-900">Login<span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>

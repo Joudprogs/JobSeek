@@ -7,7 +7,7 @@
         <p> Apply, connect, and grow — all in one place. </p>
 
             <div class="mt-10 flex items-center justify-left gap-x-6">
-                <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+                <a href="/jobseeker/createAcc/" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
             </div>
       </div>
       <div class="grid grid-cols-2 gap-4 mt-8">
@@ -28,7 +28,7 @@
   
       <!-- Text Second -->
       <div class="font-light text-gray-500 sm:text-lg">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">For Employers</h2>
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">For Job Providerss</h2>
         <p class="mb-4">
             Discover fresh talent ready to make an impact. Post jobs, browse profiles, and connect with driven graduates.
                 </p>
@@ -37,7 +37,7 @@
 
         </p>
         <div class="mt-10 flex items-center justify-left gap-x-6">
-            <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+            <a href="/jobprovider/createAcc/" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
         </div>
 
       </div>
