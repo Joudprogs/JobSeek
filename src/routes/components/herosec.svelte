@@ -34,7 +34,7 @@
           on:click={handleGetStarted}
         >
           Get started
-        </button>          <a href="/jobseeker/login/" class="text-sm/6 font-semibold text-gray-900">Login<span aria-hidden="true">→</span></a>
+        </button>          <a href="/login/" class="text-sm/6 font-semibold text-gray-900">Login<span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>

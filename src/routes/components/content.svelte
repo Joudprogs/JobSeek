@@ -28,7 +28,7 @@
   
       <!-- Text Second -->
       <div class="font-light text-gray-500 sm:text-lg">
-        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">For Job Providerss</h2>
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900">For Job Providers</h2>
         <p class="mb-4">
             Discover fresh talent ready to make an impact. Post jobs, browse profiles, and connect with driven graduates.
                 </p>

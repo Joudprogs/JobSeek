@@ -47,6 +47,8 @@
     // Redirect based on user type
     if (userType === 'seeker') {
       goto('/jobseeker/profile/'); 
+    }else{
+      goto('/jobprovider/jobadd/');
     }
   }
 
