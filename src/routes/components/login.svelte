@@ -1,39 +1,52 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { auth } from '$lib/firebase';
-  import { signInWithEmailAndPassword } from 'firebase/auth';
-  export let userType: 'seeker' | 'provider';
+import { getDoc, doc } from 'firebase/firestore';
+import { goto } from '$app/navigation';
+import { auth, db } from '$lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-  let email = '';
-  let password = '';
-  let error = '';
+let email = '';
+let password = '';
+let error = '';
 
-  const handleLogin = async () => {
-    error = '';
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log("Logged in user:", user);
-      // Redirect based on user type
-      if (userType === 'seeker') {
-        goto('/jobseeker/jobposts/');
-      }
-      else if (userType === 'provider'){
-        goto('/jobprovider/jobadd/');
-      }
+const handleLogin = async () => {
+  error = '';
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const uid = user.uid;
 
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.message);
-        error = err.message;
-      } else {
-        console.error("An unknown error occurred:", err);
-        error = "An unknown error occurred";
-      }
+    // Check if user is a job seeker
+    const seekerRef = doc(db, 'job_seekers', uid);
+    const seekerSnap = await getDoc(seekerRef);
+
+    if (seekerSnap.exists()) {
+      goto('/jobseeker/jobposts/');
+      return;
     }
 
+    // Check if user is a job provider
+    const providerRef = doc(db, 'job_providers', uid);
+    const providerSnap = await getDoc(providerRef);
 
-  };
+    if (providerSnap.exists()) {
+      goto('/jobprovider/jobadd/');
+      return;
+    }
+
+    // User type not found
+    error = 'User type not found. Please contact support.';
+
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(err.message);
+      error = err.message;
+    } else {
+      console.error("An unknown error occurred:", err);
+      error = "An unknown error occurred";
+    }
+  }
+};
+
 </script>
 
 

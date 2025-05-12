@@ -2,7 +2,7 @@
     import { db } from '$lib/firebase';
     import { getAuth } from 'firebase/auth';
     import { doc, setDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
-  
+    
     const auth = getAuth();
   
     export let onPost: (job: any) => void;
@@ -15,43 +15,45 @@
     let requirements = '';
     let type = 'Full-time';
     let category = '';
-  
+       
     async function handlePost() {
-      const user = auth.currentUser;
-  
-      if (!user) {
-        alert('You must be logged in to post a job.');
-        return;
-      }
-  
-      try {
-        const jobId = crypto.randomUUID();
-        const providerDocRef = doc(db, 'job_providers', user.uid);
-        await setDoc(providerDocRef, { updatedAt: serverTimestamp() }, { merge: true });
-  
-        const jobPostRef = doc(db, 'job_providers', user.uid, 'job_posts', jobId);
-  
-        const jobData = {
-          name,
-          description,
-          requirements,
-          type,
-          category,
-          createdAt: serverTimestamp(),
-          jobId
-        };
-  
-        await setDoc(jobPostRef, jobData);
-  
-        alert('Job posted successfully!');
-        if (onPost) onPost(jobData);
-        close();
-  
-      } catch (error) {
-        console.error('Error posting job:', error);
-        alert('Failed to post job: ' + (error as Error).message);
-      }
-    }
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert('You must be logged in to post a job.');
+    return;
+  }
+
+  try {
+    const jobId = crypto.randomUUID();
+    const providerId = user.uid; // Get the provider ID
+    const providerDocRef = doc(db, 'job_providers', user.uid);
+    await setDoc(providerDocRef, { updatedAt: serverTimestamp() }, { merge: true });
+
+    const jobPostRef = doc(db, 'job_providers', user.uid, 'job_posts', jobId);
+
+    const jobData = {
+      name,
+      description,
+      requirements,
+      type,
+      category,
+      createdAt: serverTimestamp(),
+      jobId,
+      providerId: providerId, // Add providerId here
+    };
+
+    await setDoc(jobPostRef, jobData);
+
+    alert('Job posted successfully!');
+    if (onPost) onPost(jobData);
+    close();
+
+  } catch (error) {
+    console.error('Error posting job:', error);
+    alert('Failed to post job: ' + (error as Error).message);
+  }
+}
   
     async function handleDelete() {
       const user = auth.currentUser;
@@ -81,6 +83,7 @@
     }
   </script>
   
+ 
   <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <h2 class="text-lg font-semibold mb-4">

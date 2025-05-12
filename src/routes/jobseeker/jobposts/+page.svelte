@@ -1,14 +1,10 @@
 <script>
-    // @ts-nocheck
-    
-    
-      
         import Footer from "../../components/footer.svelte";
         import Header from "../../components/header.svelte";
-        import Card from "../../components/jobapply/card.svelte";
-      
-    </script>
+        import Card from "../../components/jobapply/card.svelte"
+        import Loginheader from "../../components/loginheader.svelte";
+</script>
     
-    <Header />
+    <Loginheader></Loginheader>
     <Card></Card>
     <Footer />

@@ -1,8 +1,10 @@
 <script lang="ts">
     import { db } from '$lib/firebase';
-    import { collection, getDocs } from 'firebase/firestore';
+    import { collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
     import { onMount } from 'svelte';
-  
+    import { getAuth } from 'firebase/auth';
+    let showModal = false;
+    let selectedJob: { id: string; providerId: string; name: string };
     let jobs: any[] = [];
     let loading = true;
     let error: Error | null = null;
@@ -28,10 +30,63 @@
         console.error('Error fetching jobs:', error);
       }
     });
-  
-    function applyForJob(job: any) {
-      alert(`Applying for: ${job.name} (you can implement the actual application logic here)`);
+    function openApplyModal(job: { id: string; providerId: string; name: string }) {
+    selectedJob = job;
+    showModal = true;
+  }
+  async function confirmApply() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      alert('You must be logged in to apply.');
+      showModal = false;
+      return;
     }
+    
+    try {
+      // Fetch seeker’s profile
+      const profileRef = doc(db, 'job_seekers', user.uid, 'profile', 'details');
+      const profileSnap = await getDoc(profileRef);
+      if (!profileSnap.exists()) {
+        throw new Error('Your profile isn’t found. Please complete it first.');
+      }
+      const profileData = profileSnap.data();
+
+      // Combine profile fields with user id and application time
+      const applicationData = {
+        ...profileData,
+        id: user.uid,
+        appliedAt: serverTimestamp()
+      };
+
+      // Write a single document called "profile"
+      const applicationRef = doc(
+        db,
+        'job_providers',
+        selectedJob.providerId,
+        'job_posts',
+        selectedJob.id,
+        'applications',
+         user.uid // fixed document name
+      );
+
+  await setDoc(applicationRef, applicationData);
+
+      alert(`You’ve successfully applied for "${selectedJob.name}".`);
+    } catch (err) {
+      console.error('Error applying:', err);
+      alert('Failed to apply: ' + (err instanceof Error ? err.message : err));
+    } finally {
+      showModal = false;
+    }
+  }
+
+
+  function cancelApply() {
+    showModal = false;
+  }
+
+
   </script>
   
   <section class="py-8 antialiased mb-50 mt-30">
@@ -55,10 +110,38 @@
   
               <div class="flex justify-end">
                 <button
-                  class="bg-green-600 text-white px-6 py-2 rounded"
-                  on:click={() => applyForJob(job)}>
-                  Apply Now
-                </button>
+  class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+  on:click={() => openApplyModal(job)}
+>
+  Apply
+</button>
+
+<!-- Confirmation Modal -->
+{#if showModal}
+<div class="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center space-y-4">
+      <h2 class="text-xl font-semibold text-gray-800">Confirm Application</h2>
+      <p class="text-gray-600">
+        Are you sure you want to apply for <strong>{selectedJob.name}</strong>?<br />
+        Your profile will be shared with the company.
+      </p>
+      <div class="flex justify-center gap-4 mt-4">
+        <button
+          on:click={confirmApply}
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Yes, Apply
+        </button>
+        <button
+          on:click={cancelApply}
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
               </div>
             </div>
           {/each}
